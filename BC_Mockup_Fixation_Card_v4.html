@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Karta fiksacji kontraktowej N24 - FIX-007 - Business Central (v4)</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1500px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; flex-wrap: wrap; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-actions .btn.split { background: #8764b8; color: #fff; border-color: #8764b8; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 7px 8px; text-align: left; font-weight: 600; color: #605e5c; font-size: 11px; white-space: nowrap; }
+  .bc-grid tbody td { padding: 6px 8px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-card { padding: 16px 20px; }
+  .bc-fasttab { border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 12px; }
+  .bc-fasttab-header { background: #faf9f8; padding: 10px 16px; font-weight: 600; font-size: 14px; border-bottom: 1px solid #e0e0e0; cursor: pointer; display: flex; justify-content: space-between; }
+  .bc-fasttab-header .chevron { color: #605e5c; }
+  .bc-fasttab-body { padding: 12px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 40px; }
+  .bc-field { display: flex; align-items: baseline; gap: 8px; }
+  .bc-field .label { color: #605e5c; font-size: 12px; min-width: 200px; }
+  .bc-field .value { font-weight: 500; }
+  .bc-field .value.editable { border-bottom: 1px dashed #c8c6c4; padding-bottom: 1px; }
+  .bc-field .value.readonly { color: #605e5c; font-style: italic; }
+  .bc-factbox { background: #faf9f8; border-left: 1px solid #e0e0e0; padding: 12px 16px; width: 300px; min-width: 300px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-page-content { display: flex; }
+  .bc-page-main { flex: 1; overflow-x: auto; }
+  .bc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .bc-badge.green { background: #dff6dd; color: #107c10; }
+  .bc-badge.orange { background: #fff4ce; color: #ca5010; }
+  .bc-badge.red { background: #fde7e9; color: #d13438; }
+  .bc-badge.gray { background: #edebe9; color: #8a8886; }
+  .bc-badge.purple { background: #f0e6ff; color: #8764b8; }
+  .bc-footer { padding: 8px 20px; border-top: 1px solid #e0e0e0; background: #faf9f8; font-size: 11px; color: #8a8886; display: flex; justify-content: space-between; }
+  .side-purchase { color: #0078d4; }
+  .side-sales { color: #ca5010; }
+  .side-both { color: #8764b8; }
+  .margin-box { background: #f0e6ff; border: 1px solid #8764b8; border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
+  .source-box { background: #e8f4fd; border: 1px solid #0078d4; border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
+  .version-tag { background: #107c10; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 12px; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <div class="bc-topbar">
+    <span class="logo">Dynamics 365 Business Central</span>
+    <span class="env">TSR Produkcja</span>
+    <input class="search" placeholder="Powiedz, co chcesz zrobić..." readonly>
+    <span style="margin-left:auto;">AK</span>
+  </div>
+  <div class="bc-breadcrumb"><a href="#">Strona główna</a> &rsaquo; <a href="#">Lista fiksacji kontraktowych</a> &rsaquo; FIX-007</div>
+  <div class="bc-page-header">
+    <h1>Karta fiksacji kontraktowej N24 &mdash; FIX-007 <span class="version-tag">v4</span></h1>
+    <span class="bc-badge green" style="font-size:13px;">Otwarty</span>
+  </div>
+  <div class="bc-actions">
+    <button class="btn">Przetwarzanie &darr;</button>
+    <button class="btn split">Podziel fiksację</button>
+    <button class="btn">Powiązane &darr;</button>
+    <button class="btn">Raporty &darr;</button>
+    <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+    <button class="btn">Wpisy aplikacji</button>
+    <button class="btn">Przegląd kontraktów</button>
+    <button class="btn">Otwórz fiks. źródłową</button>
+  </div>
+  <div class="bc-page-content">
+    <div class="bc-page-main">
+      <div class="bc-card">
+        <!-- FastTab: Ogólne -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header">Ogólne <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body">
+            <div class="bc-field"><span class="label">Nr wpisu:</span><span class="value">7</span></div>
+            <div class="bc-field"><span class="label">ID fiksacji:</span><span class="value editable">FIX-007</span></div>
+            <div class="bc-field"><span class="label">Strona fiksacji:</span><span class="value editable side-sales">Sprzedaż</span></div>
+            <div class="bc-field"><span class="label">Data fiksacji:</span><span class="value editable">20.03.2026</span></div>
+            <div class="bc-field"><span class="label">Status:</span><span class="value"><span class="bc-badge green">Otwarty</span></span></div>
+            <div class="bc-field"><span class="label">Zablokowany:</span><span class="value editable">Nie</span></div>
+          </div>
+        </div>
+        <!-- FastTab: Kontrakt -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header">Kontrakt <span style="font-size:11px;color:#605e5c;font-weight:400;">(opcjonalny)</span> <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body">
+            <div class="bc-field"><span class="label">Nr kontraktu N24:</span><span class="value editable">K-2026-001</span></div>
+            <div class="bc-field"><span class="label">Typ kontraktu:</span><span class="value readonly">Sprzedaż</span></div>
+            <div class="bc-field"><span class="label">Zam. zbiorcze sprzedaży:</span><span class="value link">BSO-001</span></div>
+            <div class="bc-field"><span class="label">Zam. zbiorcze zakupu:</span><span class="value link">BPO-001</span></div>
+          </div>
+        </div>
+        <!-- FastTab: Indeks i kontrahenci -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header">Indeks i kontrahenci <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body">
+            <div class="bc-field"><span class="label">Nr indeksu:</span><span class="value editable link">AL-5052-H34</span></div>
+            <div class="bc-field"><span class="label">Opis indeksu:</span><span class="value">Aluminium 5052-H34</span></div>
+            <div class="bc-field"><span class="label">Nr dostawcy:</span><span class="value hidden-cell">&mdash; (Strona = Sprzedaż)</span></div>
+            <div class="bc-field"><span class="label">Nr odbiorcy:</span><span class="value editable link">C-20010</span></div>
+          </div>
+        </div>
+        <!-- FastTab: Fiksacja źródłowa (widoczna gdy Strona = Sprzedaż) -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header"><span style="color:#0078d4;">&#9632;</span> Fiksacja źródłowa <span style="font-size:11px;color:#605e5c;font-weight:400;">(powiązanie N:1 z fiksacją zakupową)</span> <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body">
+            <div class="bc-field"><span class="label">Nr wpisu fiks. źródłowej:</span><span class="value editable link">1 (FIX-001)</span></div>
+            <div class="bc-field"><span class="label">Dostawca źródłowy:</span><span class="value readonly">V-10010</span></div>
+            <div class="bc-field"><span class="label">Źródłowy JKB:</span><span class="value readonly" style="font-weight:700;">2 400,00 USD</span></div>
+            <div class="bc-field"><span class="label">Źródłowa cena bazowa LME:</span><span class="value readonly">2 350,00</span></div>
+            <div style="grid-column:1/3;">
+              <div class="source-box">
+                <div style="font-size:11px;color:#605e5c;">
+                  Powiązanie N:1 — ta fiksacja sprzedaży czerpie referencję kosztową z fiksacji zakupowej FIX-001.
+                  Wiele fiksacji sprzedaży może wskazywać na tę samą fiksację zakupu.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FastTab: Ceny sprzedażowe (bo Strona = Sprzedaż) -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header"><span style="color:#ca5010;">&#9632;</span> Ceny sprzedażowe <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body">
+            <div class="bc-field"><span class="label">Kod waluty:</span><span class="value editable">EUR</span></div>
+            <div class="bc-field"><span class="label">Cena bazowa LME:</span><span class="value editable">2 350,00</span></div>
+            <div class="bc-field"><span class="label">Premia sprzedażowa:</span><span class="value editable">120,00</span></div>
+            <div class="bc-field"><span class="label">Cena jednostkowa sprzedaży:</span><span class="value editable" style="border-bottom-color:#ca5010;font-weight:700;">2 470,00</span></div>
+            <div class="bc-field"><span class="label"></span><span class="value" style="font-size:11px;color:#605e5c;">= LME + Premia sprzedażowa (nadpisywalne)</span></div>
+            <!-- Pole marży — wyliczane z fiksacji źródłowej -->
+            <div style="grid-column:1/3;">
+              <div class="margin-box">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-weight:600;color:#8764b8;">Marża N24 (tylko do odczytu)</span>
+                  <span style="font-size:18px;font-weight:700;color:#107c10;">70,00 EUR/t</span>
+                </div>
+                <div style="font-size:11px;color:#605e5c;margin-top:2px;">
+                  = Cena jedn. sprz. (2 470,00) &minus; Źródłowy JKB (2 400,00) | Marża %: +2,9%
+                </div>
+                <div style="font-size:10px;color:#8a8886;margin-top:4px;">
+                  Marża wyliczana z Nr wpisu fiks. źródłowej = 1 (FIX-001). Dla Strony = Obustronny: Cena sprz. - JKB.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- FastTab: Ilości -->
+        <div class="bc-fasttab">
+          <div class="bc-fasttab-header">Ilości i realizacja <span class="chevron">&#x25BC;</span></div>
+          <div class="bc-fasttab-body" style="grid-template-columns: 1fr 1fr;">
+            <div class="bc-field"><span class="label">Ilość zafiksowana (t):</span><span class="value editable">50,000</span></div>
+            <div></div>
+
+            <div style="grid-column:1/3;border-top:1px solid #e0e0e0;padding-top:8px;margin-top:4px;">
+              <!-- Tylko strona sprzedaży (bo Strona = Sprzedaż) -->
+              <div>
+                <div style="font-weight:600;color:#ca5010;margin-bottom:6px;">&#9632; Strona sprzedaży</div>
+                <div class="bc-field"><span class="label">Zaaplikowana ilość sprzedaży:</span><span class="value">0,000</span></div>
+                <div class="bc-field"><span class="label" style="font-weight:600;">Pozostała ilość sprzedaży:</span><span class="value" style="font-weight:700;color:#ca5010;font-size:14px;">50,000</span></div>
+                <div style="background:#edebe9;border-radius:3px;height:8px;margin:6px 0;max-width:400px;"><div style="background:#ca5010;height:8px;border-radius:3px;width:0%;"></div></div>
+                <div style="font-size:11px;color:#605e5c;">Realizacja sprzedaży: 0,0%</div>
+              </div>
+              <div style="margin-top:12px;padding:6px 8px;background:#fff4ce;border-radius:4px;font-size:11px;max-width:400px;">
+                <strong>Widoczność pól ilościowych:</strong><br>
+                Strona = Zakup → tylko Pozostała ilość zakupu<br>
+                Strona = Sprzedaż → tylko Pozostała ilość sprzedaży<br>
+                Strona = Obustronny → oba pola widoczne
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bc-factbox">
+      <h3>Wpisy aplikacji</h3>
+      <div style="font-size:12px;line-height:2;">
+        <strong style="color:#ca5010;">Sprzedaż:</strong><br>
+        <span style="color:#8a8886;">(brak wpisów — nowa fiksacja)</span>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#0078d4;">Fiksacja źródłowa (FIX-001)</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Strona: <span class="side-purchase">Zakup</span><br>
+        Dostawca: V-10010<br>
+        JKB: 2 400,00 USD<br>
+        Ilość fiks.: 100,000 t<br>
+        Pozostało zakup: 52,000 t<br>
+        Status: <span class="bc-badge orange">Częśc. zaaplik.</span>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#8764b8;">Marża</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Źródłowy JKB: 2 400,00 USD<br>
+        Cena sprz.: 2 470,00 EUR<br>
+        <strong style="color:#107c10;font-size:14px;">70,00 EUR/t (+2,9%)</strong>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <div style="background:#dff6dd;padding:6px 8px;border-radius:4px;font-size:11px;">
+        <strong>Model v4:</strong><br>
+        Strona wybierana przez użytkownika.<br>
+        Nr wpisu fiks. źródłowej = N:1<br>
+        link do fiksacji zakupowej.<br>
+        Marża = Cena sprz. - Źródł.JKB (Sprzedaż)<br>
+        lub Cena sprz. - JKB (Obustronny).<br>
+        Premie osobne: zakup + sprzedaż.<br>
+        <strong>Brak tabeli dopasowań.</strong><br>
+        Nr kontraktu opcjonalny.
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <div style="background:#e8f4fd;padding:6px 8px;border-radius:4px;font-size:11px;">
+        <strong>Karta FIX-006 (Obustronny):</strong><br>
+        Pełny przykład z obu stronami<br>
+        (Zakup + Sprzedaż) — patrz<br>
+        <a href="BC_Mockup_Fixation_Card_v3.html" style="color:#0078d4;">karta Obustronny (wzór z v3)</a>.<br>
+        W v4 zmiana: Strona edytowalna,<br>
+        Fiks. źródłowa pusta dla Obustronny.
+      </div>
+    </div>
+  </div>
+  <div class="bc-footer">
+    <span>Karta fiksacji kontraktowej N24 | Strona 50101 | Model v4 | Przykład: Strona = Sprzedaż z fiksacją źródłową</span>
+    <span>Firma: TSR Poland Sp. z o.o.</span>
+  </div>
+</div>
+</body></html>

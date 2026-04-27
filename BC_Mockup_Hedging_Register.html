@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Rejestr hedgingów N24 - Business Central</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1400px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-filter-bar { padding: 6px 20px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; align-items: center; font-size: 12px; }
+  .bc-filter-bar .filter-chip { background: #e8f4fd; border: 1px solid #0078d4; border-radius: 3px; padding: 2px 8px; color: #0078d4; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 8px 10px; text-align: left; font-weight: 600; color: #605e5c; font-size: 12px; white-space: nowrap; position: sticky; top: 0; }
+  .bc-grid tbody td { padding: 7px 10px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid tbody tr.selected { background: #e8f4fd; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-grid .negative { color: #d13438; }
+  .bc-factbox { background: #faf9f8; border-left: 1px solid #e0e0e0; padding: 12px 16px; width: 300px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-page-content { display: flex; }
+  .bc-page-main { flex: 1; overflow-x: auto; }
+  .bc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .bc-badge.green { background: #dff6dd; color: #107c10; }
+  .bc-badge.orange { background: #fff4ce; color: #ca5010; }
+  .bc-badge.red { background: #fde7e9; color: #d13438; }
+  .bc-badge.gray { background: #edebe9; color: #8a8886; }
+  .bc-footer { padding: 8px 20px; border-top: 1px solid #e0e0e0; background: #faf9f8; font-size: 11px; color: #8a8886; display: flex; justify-content: space-between; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <div class="bc-topbar">
+    <span class="logo">Dynamics 365 Business Central</span>
+    <span class="env">TSR Produkcja</span>
+    <input class="search" placeholder="Powiedz, co chcesz zrobić..." readonly>
+    <span style="margin-left:auto;">AK</span>
+  </div>
+  <div class="bc-breadcrumb"><a href="#">Strona główna</a> &rsaquo; <a href="#">Moduły N24</a> &rsaquo; Rejestr hedgingów N24</div>
+  <div class="bc-page-header">
+    <h1>Rejestr hedgingów N24</h1>
+    <span style="font-size:12px;color:#605e5c;">5 rekordów</span>
+  </div>
+  <div class="bc-actions">
+    <button class="btn primary">+ Nowy hedging</button>
+    <button class="btn">Zamknij hedging</button>
+    <button class="btn">Odśwież</button>
+    <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+    <button class="btn">Raport ryzyka</button>
+    <button class="btn">Eksport do Excela</button>
+  </div>
+  <div class="bc-filter-bar">
+    Filtry: <span class="filter-chip">Status: Otwarty</span>
+    <span style="margin-left:auto;color:#8a8886;">Sortowanie: Data otwarcia malejąco</span>
+  </div>
+  <div class="bc-page-content">
+    <div class="bc-page-main">
+      <table class="bc-grid">
+        <thead>
+          <tr>
+            <th>Nr wpisu</th><th>Grupa materiałowa</th><th class="num">Ilość hedgingu (t)</th>
+            <th>Data otwarcia</th><th class="num">Cena otwarcia</th><th>Data wygaśnięcia</th>
+            <th>Data zamknięcia</th><th class="num">Cena zamknięcia</th><th class="num">Wynik hedgingu</th>
+            <th>Waluta</th><th>Status</th><th>Opis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5</td><td>Aluminium</td><td class="num">50,000</td>
+            <td>15.03.2026</td><td class="num">2 280,00</td><td>15.06.2026</td>
+            <td></td><td class="num"></td><td class="num"></td>
+            <td>USD</td><td><span class="bc-badge green">Otwarty</span></td><td>Zabezpieczenie Q2 aluminium podwójny</td>
+          </tr>
+          <tr class="selected">
+            <td>4</td><td>Miedź</td><td class="num">25,000</td>
+            <td>10.02.2026</td><td class="num">8 800,00</td><td>10.05.2026</td>
+            <td></td><td class="num"></td><td class="num"></td>
+            <td>USD</td><td><span class="bc-badge green">Otwarty</span></td><td>Zabezpieczenie Q1 miedź #1</td>
+          </tr>
+          <tr>
+            <td>3</td><td>Aluminium</td><td class="num">25,000</td>
+            <td>01.02.2026</td><td class="num">2 400,00</td><td>01.05.2026</td>
+            <td></td><td class="num"></td><td class="num"></td>
+            <td>USD</td><td><span class="bc-badge green">Otwarty</span></td><td>Zabezpieczenie Q1 aluminium #3</td>
+          </tr>
+          <tr>
+            <td>2</td><td>Aluminium</td><td class="num">25,000</td>
+            <td>15.01.2026</td><td class="num">2 350,00</td><td>15.04.2026</td>
+            <td></td><td class="num"></td><td class="num"></td>
+            <td>USD</td><td><span class="bc-badge green">Otwarty</span></td><td>Zabezpieczenie Q1 aluminium #2</td>
+          </tr>
+          <tr style="color:#8a8886;">
+            <td>1</td><td>Aluminium</td><td class="num">25,000</td>
+            <td>05.01.2026</td><td class="num">2 320,00</td><td>05.04.2026</td>
+            <td>28.02.2026</td><td class="num">2 380,00</td><td class="num negative">-1 500,00</td>
+            <td>USD</td><td><span class="bc-badge gray">Zamknięty</span></td><td>Zabezpieczenie Q1 aluminium #1</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bc-factbox">
+      <h3>Podsumowanie hedgingów</h3>
+      <div style="font-size:12px;line-height:2;">
+        <strong>Aluminium (Otwarte):</strong><br>
+        Ilość: 100,000 t<br>
+        Hedgingi: 3 szt.<br>
+        <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
+        <strong>Miedź (Otwarte):</strong><br>
+        Ilość: 25,000 t<br>
+        Hedgingi: 1 szt.<br>
+        <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
+        <strong>Zamknięte:</strong><br>
+        Ilość: 25,000 t<br>
+        Wynik: <span class="negative">-1 500,00 USD</span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-footer">
+    <span>Rejestr hedgingów N24 | Strona 50110</span>
+    <span>Firma: TSR Poland Sp. z o.o.</span>
+  </div>
+</div>
+</body></html>

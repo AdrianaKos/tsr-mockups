@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Przegląd kontraktów N24 - Business Central (v4)</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1650px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; flex-wrap: wrap; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-filter-bar { padding: 6px 20px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; align-items: center; font-size: 12px; flex-wrap: wrap; }
+  .bc-filter-bar .filter-chip { background: #e8f4fd; border: 1px solid #0078d4; border-radius: 3px; padding: 2px 8px; color: #0078d4; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 7px 8px; text-align: left; font-weight: 600; color: #605e5c; font-size: 11px; white-space: nowrap; position: sticky; top: 0; }
+  .bc-grid tbody td { padding: 6px 8px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid tbody tr.selected { background: #e8f4fd; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-grid .risk-high { color: #d13438; font-weight: 700; }
+  .bc-grid .risk-ok { color: #107c10; }
+  .bc-factbox { background: #faf9f8; border-left: 1px solid #e0e0e0; padding: 12px 16px; width: 320px; min-width: 320px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-page-content { display: flex; }
+  .bc-page-main { flex: 1; overflow-x: auto; }
+  .bc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .bc-badge.green { background: #dff6dd; color: #107c10; }
+  .bc-badge.red { background: #fde7e9; color: #d13438; }
+  .bc-badge.orange { background: #fff4ce; color: #ca5010; }
+  .bc-footer { padding: 8px 20px; border-top: 1px solid #e0e0e0; background: #faf9f8; font-size: 11px; color: #8a8886; display: flex; justify-content: space-between; }
+  .version-tag { background: #107c10; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 12px; }
+  .temp-banner { background: #f0e6ff; border-bottom: 1px solid #8764b8; padding: 4px 20px; font-size: 11px; color: #8764b8; font-weight: 600; }
+  .kpi-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; }
+  .kpi-card .kpi-value { font-size: 20px; font-weight: 700; }
+  .kpi-card .kpi-label { font-size: 11px; color: #605e5c; }
+  .progress-bar { background: #edebe9; border-radius: 3px; height: 6px; margin: 4px 0; }
+  .progress-bar .fill { height: 6px; border-radius: 3px; }
+  .bc-grid .overreceipt-note { font-size: 10px; color: #ca5010; cursor: help; }
+  .overreceipt-box { background: #fff4ce; border: 1px solid #ca5010; border-radius: 4px; padding: 8px; font-size: 11px; margin-bottom: 8px; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <div class="bc-topbar">
+    <span class="logo">Dynamics 365 Business Central</span>
+    <span class="env">TSR Produkcja</span>
+    <input class="search" placeholder="Powiedz, co chcesz zrobić..." readonly>
+    <span style="margin-left:auto;">AK</span>
+  </div>
+  <div class="bc-breadcrumb"><a href="#">Strona główna</a> &rsaquo; <a href="#">Moduły N24</a> &rsaquo; Przegląd kontraktów N24</div>
+  <div class="bc-page-header">
+    <h1>Przegląd kontraktów N24 <span class="version-tag">v4</span></h1>
+    <span style="font-size:12px;color:#605e5c;">3 pozycje (per kontrakt + indeks)</span>
+  </div>
+  <div class="temp-banner">&#9881; Dane generowane dynamicznie przez GenerateContractOverview (rekord tymczasowy) — nie FlowFields. Odśwież aby przeliczyć.</div>
+  <div class="bc-actions">
+    <button class="btn primary">Odśwież KPI</button>
+    <button class="btn">Otwórz fiksacje</button>
+    <button class="btn">Otwórz wpisy aplikacji</button>
+    <button class="btn">Otwórz kontrakt</button>
+    <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+    <button class="btn">Drukuj</button>
+    <button class="btn">Eksport do Excela</button>
+  </div>
+  <div class="bc-filter-bar">
+    Filtry:
+    <span class="filter-chip">Nr kontraktu: (wszystkie)</span>
+    <span class="filter-chip">Nr indeksu: (wszystkie)</span>
+    <span class="filter-chip">Nr dostawcy: (wszystkie)</span>
+    <span class="filter-chip">Nr odbiorcy: (wszystkie)</span>
+    <span class="filter-chip">Data: 01.01.2026..31.12.2026</span>
+  </div>
+  <div class="bc-page-content">
+    <div class="bc-page-main">
+      <table class="bc-grid">
+        <thead>
+          <tr>
+            <th rowspan="2">Nr kontraktu</th>
+            <th rowspan="2">Nr indeksu</th>
+            <th rowspan="2">Opis</th>
+            <th rowspan="2" class="num">Ilość kontraktowa</th>
+            <th rowspan="2" class="num">Ilość zafiksowana</th>
+            <th rowspan="2" class="num" style="background:#fde7e9;">Ilość niezafiks.<br><span style="font-size:10px;font-weight:400;">(ryzyko)</span></th>
+            <th colspan="2" style="text-align:center;background:#e8f4fd;border-bottom:1px solid #0078d4;">Zafiksowane niewykorzystane</th>
+            <th colspan="2" style="text-align:center;background:#dff6dd;border-bottom:1px solid #107c10;">Zaaplikowane</th>
+            <th rowspan="2" class="num">Fiksacje<br><span style="font-size:10px;font-weight:400;">(ilość)</span></th>
+          </tr>
+          <tr>
+            <th class="num" style="background:#e8f4fd;">Niewyk. zakup</th>
+            <th class="num" style="background:#fff4ce;">Niewyk. sprz.</th>
+            <th class="num" style="background:#dff6dd;">Zaaplik. zakup</th>
+            <th class="num" style="background:#dff6dd;">Zaaplik. sprz.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- K-2026-001, AL-5052-H34 -->
+          <tr class="selected">
+            <td class="link">K-2026-001</td>
+            <td class="link">AL-5052-H34</td>
+            <td>Aluminium 5052-H34</td>
+            <td class="num">500,000</td>
+            <td class="num link" title="Drill-down: lista fiksacji">230,000</td>
+            <td class="num risk-high" style="background:#fde7e9;">270,000</td>
+            <td class="num" style="background:#e8f4fd;">82,000</td>
+            <td class="num" style="background:#fff4ce;">80,000</td>
+            <td class="num" style="background:#dff6dd;">148,000</td>
+            <td class="num" style="background:#dff6dd;">100,000</td>
+            <td class="num">4</td>
+          </tr>
+          <!-- K-2026-001, CU-C11000 -->
+          <tr>
+            <td class="link">K-2026-001</td>
+            <td class="link">CU-C11000</td>
+            <td>Miedź C11000 pręty</td>
+            <td class="num">300,000</td>
+            <td class="num link">200,000</td>
+            <td class="num risk-high" style="background:#fde7e9;">100,000</td>
+            <td class="num" style="background:#e8f4fd;">200,000</td>
+            <td class="num" style="background:#fff4ce;color:#8a8886;">n/d</td>
+            <td class="num" style="background:#dff6dd;">0,000</td>
+            <td class="num" style="background:#dff6dd;color:#8a8886;">n/d</td>
+            <td class="num">1</td>
+          </tr>
+          <!-- K-2026-002, AL-6061-T6  —  STAN PO OVER-RECEIPT (PZ 95t ale Zaaplik. tylko 75t bo cap) -->
+          <tr>
+            <td class="link">K-2026-002</td>
+            <td class="link">AL-6061-T6</td>
+            <td>Aluminium 6061-T6 rury</td>
+            <td class="num">100,000</td>
+            <td class="num link">75,000</td>
+            <td class="num" style="background:#fde7e9;color:#ca5010;">25,000</td>
+            <td class="num" style="background:#e8f4fd;">0,000</td>
+            <td class="num" style="background:#fff4ce;">65,000</td>
+            <td class="num" style="background:#dff6dd;">75,000 <span class="overreceipt-note" title="Faktycznie przyjęto na PZ: 95t. Różnica 20t = nadwyżka bez fiksacji (over-receipt cap).">⚠ 95t na PZ</span></td>
+            <td class="num" style="background:#dff6dd;">10,000</td>
+            <td class="num">1</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="font-weight:700;background:#faf9f8;border-top:2px solid #323130;">
+            <td colspan="3" style="padding:7px 8px;">SUMA</td>
+            <td class="num" style="padding:7px 8px;">900,000</td>
+            <td class="num" style="padding:7px 8px;">505,000</td>
+            <td class="num" style="padding:7px 8px;background:#fde7e9;color:#d13438;">395,000</td>
+            <td class="num" style="padding:7px 8px;background:#e8f4fd;">282,000</td>
+            <td class="num" style="padding:7px 8px;background:#fff4ce;">145,000</td>
+            <td class="num" style="padding:7px 8px;background:#dff6dd;">223,000</td>
+            <td class="num" style="padding:7px 8px;background:#dff6dd;">110,000</td>
+            <td class="num" style="padding:7px 8px;">6</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- Wizualizacja ryzyka pod tabelą -->
+      <div style="padding:16px 20px;border-top:2px solid #e0e0e0;">
+        <h3 style="font-size:14px;margin-bottom:12px;color:#323130;">Wizualizacja ryzyka ilościowego per kontrakt + indeks</h3>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <!-- Pasek 1: K-2026-001, AL-5052-H34 -->
+          <div style="flex:1;min-width:250px;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:4px;">K-2026-001 / AL-5052-H34</div>
+            <div style="font-size:11px;color:#605e5c;">Ilość kontr.: 500 t | Zafiksowane: 230 t (46%)</div>
+            <div class="progress-bar" style="height:12px;">
+              <div class="fill" style="background:linear-gradient(90deg, #107c10 29.6%, #0078d4 29.6%, #0078d4 46%, #d13438 46%, #d13438 100%); width:100%; height:12px; border-radius:3px;" title="Zaaplik.: 148t | Niewyk.: 82t | Niezafiks.: 270t"></div>
+            </div>
+            <div style="display:flex;gap:12px;font-size:10px;margin-top:2px;">
+              <span style="color:#107c10;">&#9632; Zaaplik. 148t</span>
+              <span style="color:#0078d4;">&#9632; Niewyk. 82t</span>
+              <span style="color:#d13438;">&#9632; Niezafiks. 270t</span>
+            </div>
+          </div>
+          <!-- Pasek 2: K-2026-001, CU-C11000 -->
+          <div style="flex:1;min-width:250px;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:4px;">K-2026-001 / CU-C11000</div>
+            <div style="font-size:11px;color:#605e5c;">Ilość kontr.: 300 t | Zafiksowane: 200 t (67%)</div>
+            <div class="progress-bar" style="height:12px;">
+              <div class="fill" style="background:linear-gradient(90deg, #0078d4 0%, #0078d4 67%, #d13438 67%, #d13438 100%); width:100%; height:12px; border-radius:3px;" title="Zaaplik.: 0t | Niewyk.: 200t | Niezafiks.: 100t"></div>
+            </div>
+            <div style="display:flex;gap:12px;font-size:10px;margin-top:2px;">
+              <span style="color:#107c10;">&#9632; Zaaplik. 0t</span>
+              <span style="color:#0078d4;">&#9632; Niewyk. 200t</span>
+              <span style="color:#d13438;">&#9632; Niezafiks. 100t</span>
+            </div>
+          </div>
+          <!-- Pasek 3: K-2026-002, AL-6061-T6  —  po over-receipt -->
+          <div style="flex:1;min-width:250px;">
+            <div style="font-size:12px;font-weight:600;margin-bottom:4px;">K-2026-002 / AL-6061-T6</div>
+            <div style="font-size:11px;color:#605e5c;">Ilość kontr.: 100 t | Zafiksowane: 75 t (75%) | <span style="color:#ca5010;">PZ: 95 t (⚠ +20 t bez fiks.)</span></div>
+            <div class="progress-bar" style="height:12px;">
+              <div class="fill" style="background:linear-gradient(90deg, #107c10 75%, #d13438 75%, #d13438 100%); width:100%; height:12px; border-radius:3px;" title="Zaaplik.: 75t | Niewyk.: 0t | Niezafiks.: 25t"></div>
+            </div>
+            <div style="display:flex;gap:12px;font-size:10px;margin-top:2px;">
+              <span style="color:#107c10;">&#9632; Zaaplik. 75t</span>
+              <span style="color:#0078d4;">&#9632; Niewyk. 0t</span>
+              <span style="color:#d13438;">&#9632; Niezafiks. 25t</span>
+              <span style="color:#ca5010;">&#9632; Nadwyżka PZ +20t</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bc-factbox">
+      <h3>K-2026-001 / AL-5052-H34</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div class="kpi-card">
+          <div class="kpi-value">500</div>
+          <div class="kpi-label">Ilość kontraktowa (t)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color:#323130;">230</div>
+          <div class="kpi-label">Ilość zafiksowana (t)</div>
+        </div>
+        <div class="kpi-card" style="border-color:#d13438;">
+          <div class="kpi-value" style="color:#d13438;">270</div>
+          <div class="kpi-label">Ilość niezafiks. (ryzyko)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color:#107c10;">46%</div>
+          <div class="kpi-label">% zafiksowane</div>
+        </div>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#0078d4;">Zakup</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Zaaplikowano: 148,000 t<br>
+        Niewykorzystano: 82,000 t<br>
+        <div class="progress-bar"><div class="fill" style="background:#0078d4;width:64%;"></div></div>
+        Realizacja zakupu: 64,3%
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#ca5010;">Sprzedaż</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Zaaplikowano: 100,000 t<br>
+        Niewykorzystano: 80,000 t<br>
+        <div class="progress-bar"><div class="fill" style="background:#ca5010;width:56%;"></div></div>
+        Realizacja sprzedaży: 55,6%
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3>Fiksacje w tym kontrakcie</h3>
+      <div style="font-size:11px;line-height:1.8;">
+        <span class="link">FIX-001</span> Zakup 100t <span class="bc-badge orange">Częśc.</span><br>
+        <span class="link">FIX-002</span> Zakup 50t <span class="bc-badge" style="background:#edebe9;color:#8a8886;">Zamknięty</span><br>
+        <span class="link">FIX-003</span> Obustr. 80t <span class="bc-badge orange">Częśc.</span><br>
+        <span class="link">FIX-007</span> Sprzedaż 50t <span class="bc-badge green">Otwarty</span>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <div style="background:#dff6dd;padding:6px 8px;border-radius:4px;font-size:11px;">
+        <strong>Model v4:</strong><br>
+        &#8226; Dane z rekordu tymczasowego (nie FlowFields)<br>
+        &#8226; GenerateContractOverview()<br>
+        &#8226; Agregacja per Kontrakt + Indeks<br>
+        &#8226; Obustronny liczy fiks. raz, nie 2x<br>
+        &#8226; Niewyk. zakup/sprzedaż osobno<br>
+        &#8226; Drill-down do listy fiksacji
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <div class="overreceipt-box">
+        <strong>⚠ K-2026-002 / AL-6061-T6 — Over-receipt</strong><br><br>
+        <table style="font-size:11px;width:100%;border-collapse:collapse;">
+          <tr><td>Ilość zafiksowana:</td><td style="text-align:right;font-weight:600;">75,000 t</td></tr>
+          <tr><td>Zaaplik. zakup (z fiksacji):</td><td style="text-align:right;font-weight:600;">75,000 t</td></tr>
+          <tr style="border-top:1px dashed #ca5010;"><td>Faktycznie przyjęto na PZ:</td><td style="text-align:right;font-weight:700;color:#ca5010;">95,000 t</td></tr>
+          <tr><td><strong>Nadwyżka bez fiksacji:</strong></td><td style="text-align:right;font-weight:700;color:#d13438;">20,000 t</td></tr>
+        </table>
+        <br>
+        <span style="font-size:10px;color:#605e5c;">
+          Nadwyżka = ilość PZ - Zaaplik. zakup.<br>
+          20t zaksięgowane standardowo, bez<br>
+          wpisu w rejestrze aplikacji fiksacji.<br>
+          <strong>Akcja:</strong> Otwórz PZ → Przypisz fiksację<br>
+          aby powiązać 20t z inną fiksacją.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="bc-footer">
+    <span>Przegląd kontraktów N24 | Strona 50103 | Model v4 | Źródło: rekord tymczasowy (GenerateContractOverview)</span>
+    <span>Czerwone = Niezafiksowane (ryzyko) | Niebieskie = Niewykorzystane zakup | Pomarańczowe = Niewykorzystane sprzedaż | Zielone = Zaaplikowane | Firma: TSR Poland Sp. z o.o.</span>
+  </div>
+</div>
+</body></html>

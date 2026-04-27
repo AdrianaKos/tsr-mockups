@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lista fiksacji kontraktowych N24 - Business Central (v4)</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1650px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; flex-wrap: wrap; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-filter-bar { padding: 6px 20px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; align-items: center; font-size: 12px; }
+  .bc-filter-bar .filter-chip { background: #e8f4fd; border: 1px solid #0078d4; border-radius: 3px; padding: 2px 8px; color: #0078d4; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 7px 8px; text-align: left; font-weight: 600; color: #605e5c; font-size: 11px; white-space: nowrap; position: sticky; top: 0; }
+  .bc-grid tbody td { padding: 6px 8px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid tbody tr.selected { background: #e8f4fd; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-grid .status-open { color: #107c10; font-weight: 600; }
+  .bc-grid .status-partial { color: #ca5010; font-weight: 600; }
+  .bc-grid .status-closed { color: #8a8886; }
+  .bc-grid .risk-high { color: #d13438; font-weight: 700; }
+  .bc-grid .negative { color: #d13438; }
+  .bc-grid .side-purchase { color: #0078d4; }
+  .bc-grid .side-sales { color: #ca5010; }
+  .bc-grid .side-both { color: #8764b8; }
+  .bc-grid .hidden-cell { color: #c8c6c4; font-style: italic; font-size: 11px; }
+  .bc-factbox { background: #faf9f8; border-left: 1px solid #e0e0e0; padding: 12px 16px; width: 300px; min-width: 300px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-page-content { display: flex; }
+  .bc-page-main { flex: 1; overflow-x: auto; }
+  .bc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .bc-badge.green { background: #dff6dd; color: #107c10; }
+  .bc-badge.orange { background: #fff4ce; color: #ca5010; }
+  .bc-badge.red { background: #fde7e9; color: #d13438; }
+  .bc-badge.gray { background: #edebe9; color: #8a8886; }
+  .bc-badge.purple { background: #f0e6ff; color: #8764b8; }
+  .bc-footer { padding: 8px 20px; border-top: 1px solid #e0e0e0; background: #faf9f8; font-size: 11px; color: #8a8886; display: flex; justify-content: space-between; }
+  .margin-positive { color: #107c10; font-weight: 600; }
+  .margin-negative { color: #d13438; font-weight: 600; }
+  .version-tag { background: #107c10; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; margin-left: 12px; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <div class="bc-topbar">
+    <span class="logo">Dynamics 365 Business Central</span>
+    <span class="env">TSR Produkcja</span>
+    <input class="search" placeholder="Powiedz, co chcesz zrobić..." readonly>
+    <span style="margin-left:auto;">AK</span>
+  </div>
+  <div class="bc-breadcrumb"><a href="#">Strona główna</a> &rsaquo; <a href="#">Moduły N24</a> &rsaquo; Lista fiksacji kontraktowych N24</div>
+  <div class="bc-page-header">
+    <h1>Lista fiksacji kontraktowych N24 <span class="version-tag">v4</span></h1>
+    <span style="font-size:12px;color:#605e5c;">7 rekordów</span>
+  </div>
+  <div class="bc-actions">
+    <button class="btn primary">+ Nowy</button>
+    <button class="btn">Edytuj</button>
+    <button class="btn">Usuń</button>
+    <button class="btn">Odśwież</button>
+    <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+    <button class="btn">Podziel fiksację</button>
+    <button class="btn">Przegląd kontraktów</button>
+    <button class="btn">Drukuj</button>
+    <button class="btn">Eksport do Excela</button>
+  </div>
+  <div class="bc-filter-bar">
+    Filtry: <span class="filter-chip">Status: Otwarty | Częściowo zaaplikowany</span>
+    <span style="margin-left:auto;color:#8a8886;">Sortowanie: Nr wpisu rosnąco | Strona fiksacji wybierana przez użytkownika</span>
+  </div>
+  <div class="bc-page-content">
+    <div class="bc-page-main">
+      <table class="bc-grid">
+        <thead>
+          <tr>
+            <th>Nr wpisu</th><th>ID fiksacji</th><th>Strona</th><th>Nr kontraktu</th>
+            <th>Nr indeksu</th><th>Opis</th><th>Dostawca</th><th>Odbiorca</th>
+            <th>Fiks. źródł.</th>
+            <th>Data fiks.</th><th>Waluta</th><th class="num">LME</th>
+            <th class="num">Premia zak.</th><th class="num">Premia sprz.</th>
+            <th class="num">JKB</th><th class="num">Cena sprz.</th>
+            <th class="num" style="background:#f0e6ff;">Marża</th>
+            <th class="num">Ilość fiks.</th>
+            <th class="num">Zaaplik. zak.</th><th class="num">Zaaplik. sprz.</th>
+            <th class="num" style="background:#e8f4fd;">Pozost. zak.</th>
+            <th class="num" style="background:#fff4ce;">Pozost. sprz.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- FIX-001: Tylko zakup -->
+          <tr class="selected">
+            <td class="link">1</td><td>FIX-001</td>
+            <td class="side-purchase">Zakup</td>
+            <td>K-2026-001</td>
+            <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34</td>
+            <td>V-10010</td><td class="hidden-cell">&mdash;</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>15.01.2026</td><td>USD</td>
+            <td class="num">2 350</td>
+            <td class="num">50</td><td class="num hidden-cell">n/d</td>
+            <td class="num">2 400</td><td class="num hidden-cell">n/d</td>
+            <td class="num hidden-cell" style="background:#f0e6ff;">n/d</td>
+            <td class="num">100,000</td>
+            <td class="num">48,000</td><td class="num hidden-cell">n/d</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">52,000</td>
+            <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
+            <td><span class="bc-badge orange">Częśc. zaaplik.</span></td>
+          </tr>
+          <!-- FIX-002: Tylko zakup — Zamknięty -->
+          <tr style="color:#8a8886;">
+            <td class="link">2</td><td>FIX-002</td>
+            <td class="side-purchase">Zakup</td><td>K-2026-001</td>
+            <td>AL-5052-H34</td><td>Aluminium 5052-H34</td>
+            <td>V-10010</td><td class="hidden-cell">&mdash;</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>22.01.2026</td><td>USD</td>
+            <td class="num">2 380</td>
+            <td class="num">50</td><td class="num hidden-cell">n/d</td>
+            <td class="num">2 430</td><td class="num hidden-cell">n/d</td>
+            <td class="num hidden-cell" style="background:#f0e6ff;">n/d</td>
+            <td class="num">50,000</td>
+            <td class="num">50,000</td><td class="num hidden-cell">n/d</td>
+            <td class="num" style="background:#e8f4fd;">0,000</td>
+            <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
+            <td><span class="bc-badge gray">Zamknięty</span></td>
+          </tr>
+          <!-- FIX-003: Obustronny — zakup i sprzedaż na jednym rekordzie -->
+          <tr>
+            <td class="link">3</td><td>FIX-003</td>
+            <td class="side-both">Obustronny</td>
+            <td>K-2026-001</td>
+            <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34</td>
+            <td>V-10010</td><td>C-20010</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>25.01.2026</td><td>EUR</td>
+            <td class="num">2 350</td>
+            <td class="num">65</td><td class="num">130</td>
+            <td class="num">2 415</td><td class="num">2 480</td>
+            <td class="num margin-positive" style="background:#f0e6ff;">65,00</td>
+            <td class="num">80,000</td>
+            <td class="num">50,000</td><td class="num">50,000</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">30,000</td>
+            <td class="num" style="font-weight:700;color:#ca5010;background:#fff4ce;">30,000</td>
+            <td><span class="bc-badge orange">Częśc. zaaplik.</span></td>
+          </tr>
+          <!-- FIX-004: Tylko zakup — miedź -->
+          <tr>
+            <td class="link">4</td><td>FIX-004</td>
+            <td class="side-purchase">Zakup</td><td>K-2026-001</td>
+            <td class="link">CU-C11000</td><td>Miedź C11000 pręty</td>
+            <td>V-10020</td><td class="hidden-cell">&mdash;</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>01.02.2026</td><td>USD</td>
+            <td class="num">8 750</td>
+            <td class="num">100</td><td class="num hidden-cell">n/d</td>
+            <td class="num">8 850</td><td class="num hidden-cell">n/d</td>
+            <td class="num hidden-cell" style="background:#f0e6ff;">n/d</td>
+            <td class="num">200,000</td>
+            <td class="num">0,000</td><td class="num hidden-cell">n/d</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">200,000</td>
+            <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
+            <td><span class="bc-badge green">Otwarty</span></td>
+          </tr>
+          <!-- FIX-005: Tylko zakup — bez kontraktu, ujemna premia -->
+          <tr>
+            <td class="link">5</td><td>FIX-005</td>
+            <td class="side-purchase">Zakup</td>
+            <td style="color:#ca5010;font-style:italic;">(brak)</td>
+            <td class="link">AL-6061-T6</td><td>Aluminium 6061-T6</td>
+            <td>V-10010</td><td class="hidden-cell">&mdash;</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>10.03.2026</td><td>PLN</td>
+            <td class="num">10 200</td>
+            <td class="num negative">-150</td><td class="num hidden-cell">n/d</td>
+            <td class="num">10 050</td><td class="num hidden-cell">n/d</td>
+            <td class="num hidden-cell" style="background:#f0e6ff;">n/d</td>
+            <td class="num">25,000</td>
+            <td class="num">0,000</td><td class="num hidden-cell">n/d</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">25,000</td>
+            <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
+            <td><span class="bc-badge green">Otwarty</span></td>
+          </tr>
+          <!-- FIX-006: Obustronny — pełny rekord z marżą -->
+          <tr>
+            <td class="link">6</td><td>FIX-006</td>
+            <td class="side-both">Obustronny</td>
+            <td>K-2026-002</td>
+            <td class="link">AL-6061-T6</td><td>Aluminium 6061-T6</td>
+            <td>V-10010</td><td>C-20030</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>15.03.2026</td><td>EUR</td>
+            <td class="num">2 290</td>
+            <td class="num">45</td><td class="num">100</td>
+            <td class="num">2 335</td><td class="num">2 390</td>
+            <td class="num margin-positive" style="background:#f0e6ff;">55,00</td>
+            <td class="num">75,000</td>
+            <td class="num">25,000</td><td class="num">10,000</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">50,000</td>
+            <td class="num" style="font-weight:700;color:#ca5010;background:#fff4ce;">65,000</td>
+            <td><span class="bc-badge orange">Częśc. zaaplik.</span></td>
+          </tr>
+          <!-- FIX-007: Sprzedaż — fiksacja sprzedażowa ze źródłową fiksacją (N:1 link do FIX-001) -->
+          <tr>
+            <td class="link">7</td><td>FIX-007</td>
+            <td class="side-sales">Sprzedaż</td>
+            <td>K-2026-001</td>
+            <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34</td>
+            <td class="hidden-cell">&mdash;</td><td>C-20010</td>
+            <td class="link" title="Nr wpisu fiksacji źródłowej = 1 (FIX-001)">1 (FIX-001)</td>
+            <td>20.03.2026</td><td>EUR</td>
+            <td class="num">2 350</td>
+            <td class="num hidden-cell">n/d</td><td class="num">120</td>
+            <td class="num hidden-cell" style="color:#8a8886;" title="JKB z fiksacji źródłowej: 2 400">2 400*</td><td class="num">2 470</td>
+            <td class="num margin-positive" style="background:#f0e6ff;" title="Marża = Cena sprz. - Źródł.JKB">70,00</td>
+            <td class="num">50,000</td>
+            <td class="num hidden-cell">n/d</td><td class="num">0,000</td>
+            <td class="num hidden-cell" style="background:#e8f4fd;">n/d</td>
+            <td class="num" style="font-weight:700;color:#ca5010;background:#fff4ce;">50,000</td>
+            <td><span class="bc-badge green">Otwarty</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bc-factbox">
+      <h3>FIX-007 (Sprzedaż)</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        <strong>Strona:</strong> <span class="side-sales">Sprzedaż</span><br>
+        <strong>Kontrakt:</strong> K-2026-001<br>
+        <strong>Ilość fiks.:</strong> 50,000 t<br>
+        <strong>Fiks. źródłowa:</strong> <span class="link">FIX-001</span> (Zakup)
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#8764b8;">Marża</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Źródłowy JKB: 2 400,00 USD (z FIX-001)<br>
+        Cena sprzedaży: 2 470,00 EUR<br>
+        <strong style="color:#107c10;font-size:14px;">Marża: 70,00 EUR/t (+2,9%)</strong>
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <h3 style="color:#ca5010;">Sprzedaż</h3>
+      <div style="font-size:12px;line-height:1.8;">
+        Zaaplikowano: 0,000 t<br>
+        <strong>Pozostało: 50,000 t</strong><br>
+        <div style="background:#edebe9;border-radius:3px;height:6px;margin:4px 0;"><div style="background:#ca5010;height:6px;border-radius:3px;width:0%;"></div></div>
+        Realizacja: 0,0%
+      </div>
+      <hr style="margin:8px 0;border:none;border-top:1px solid #e0e0e0;">
+      <div style="background:#dff6dd;padding:6px 8px;border-radius:4px;font-size:11px;">
+        <strong>Model v4:</strong><br>
+        Strona wybierana przez użytkownika.<br>
+        Fiks. źródłowa = link N:1 do zakupu.<br>
+        Marża = Cena sprz. - JKB (Obustr.) lub<br>
+        Cena sprz. - Źródł.JKB (Sprzedaż).<br>
+        Premie osobne: zakup + sprzedaż.<br>
+        <strong>Brak tabeli dopasowań.</strong><br>
+        Nr kontraktu opcjonalny.
+      </div>
+    </div>
+  </div>
+  <div class="bc-footer">
+    <span>Lista fiksacji kontraktowych N24 | Strona 50100 | Model v4</span>
+    <span>Pozost. zak. = niebieskie | Pozost. sprz. = pomarańczowe | Marża = fioletowe | Fiks. źródł. = link N:1 | n/d = niewidoczne dla danej strony | *JKB z fiks. źródłowej</span>
+  </div>
+</div>
+</body></html>

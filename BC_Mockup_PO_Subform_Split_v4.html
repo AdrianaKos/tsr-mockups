@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Purchase Order - Podział linii wg fiksacji - Business Central (v4)</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1500px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; flex-wrap: wrap; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-actions .btn.split { background: #8764b8; color: #fff; border-color: #8764b8; }
+  .bc-actions .sep { border-left: 1px solid #d0d0d0; margin: 0 4px; }
+  .bc-content { display: flex; gap: 0; }
+  .bc-main { flex: 1; padding: 16px 20px; overflow-x: auto; }
+  .bc-factbox { width: 340px; border-left: 1px solid #e0e0e0; background: #faf9f8; padding: 16px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-factbox .fb-section { margin-bottom: 16px; border: 1px solid #e0e0e0; border-radius: 4px; background: #fff; padding: 12px; }
+  .bc-factbox .fb-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; }
+  .bc-factbox .fb-row .label { color: #605e5c; }
+  .bc-factbox .fb-row .value { font-weight: 600; }
+  .bc-fasttab { border: 1px solid #e0e0e0; border-radius: 4px; margin-bottom: 12px; }
+  .bc-fasttab-header { background: #faf9f8; padding: 10px 16px; font-weight: 600; font-size: 14px; border-bottom: 1px solid #e0e0e0; cursor: pointer; display: flex; justify-content: space-between; }
+  .bc-fasttab-body { padding: 0; }
+  .bc-field-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 24px; padding: 12px 16px; }
+  .bc-field label { font-size: 11px; color: #605e5c; display: block; margin-bottom: 2px; }
+  .bc-field .val { font-size: 13px; color: #323130; font-weight: 500; }
+  .bc-field .val.link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 7px 8px; text-align: left; font-weight: 600; color: #605e5c; font-size: 11px; white-space: nowrap; }
+  .bc-grid tbody td { padding: 6px 8px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .row-fixated { background: #e8f4fd; }
+  .row-nofixation { background: #fff8e5; }
+  .badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .badge-fix { background: #deecf9; color: #0050a0; }
+  .badge-none { background: #fff4ce; color: #8a6d00; }
+  .badge-split { background: #e8daef; color: #5b2d8e; }
+  .note { padding: 12px 20px; margin: 12px 0; border-left: 4px solid #8764b8; background: #f5f0fa; font-size: 12px; color: #5b2d8e; border-radius: 0 4px 4px 0; }
+  .note strong { display: block; margin-bottom: 4px; }
+  .note-info { border-left-color: #0078d4; background: #f0f6ff; color: #004578; }
+  .before-after { display: flex; gap: 24px; margin: 16px 0; }
+  .before-after .panel { flex: 1; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; }
+  .before-after .panel-header { padding: 8px 12px; font-weight: 600; font-size: 13px; }
+  .panel-before .panel-header { background: #fde7e9; color: #a80000; }
+  .panel-after .panel-header { background: #dff6dd; color: #107c10; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <!-- Top bar -->
+  <div class="bc-topbar">
+    <span class="logo">Business Central</span>
+    <span class="env">CRONUS PL (Sandbox)</span>
+    <input class="search" placeholder="Szukaj..." />
+  </div>
+  <div class="bc-breadcrumb">
+    <a href="#">Strona główna</a> &rsaquo; <a href="#">Zamówienia zakupu</a> &rsaquo; ZZ-001250
+  </div>
+
+  <!-- Page header -->
+  <div class="bc-page-header">
+    <h1>Zamówienie zakupu ZZ-001250</h1>
+    <span style="font-size:12px; color:#605e5c;">Dostawca: V-AL-001 &bull; Metal Suppliers Sp. z o.o. &bull; Kontrakt: K-2026-002</span>
+  </div>
+
+  <!-- Actions bar -->
+  <div class="bc-actions">
+    <button class="btn primary">Księguj</button>
+    <button class="btn">Zwolnij</button>
+    <div class="sep"></div>
+    <button class="btn split" title="Dzieli zaznaczoną linię na: część z fiksacją (Remaining Qty) + resztę bez fiksacji">⚡ Podziel wg fiksacji</button>
+    <button class="btn">Otwórz fiksację</button>
+    <button class="btn">Otwórz wpisy aplikacji</button>
+    <div class="sep"></div>
+    <button class="btn">Drukuj</button>
+  </div>
+
+  <div class="bc-content">
+    <div class="bc-main">
+      <!-- Note: explanation of split -->
+      <div class="note">
+        <strong>💡 Makieta: Podział linii wg fiksacji (Split Line by Fixation)</strong>
+        Akcja <b>Podziel wg fiksacji</b> na subformie zamówienia zakupu/sprzedaży. Dzieli linię na dwie:
+        (1) linia z ilością = Remaining Qty fiksacji (z ceną z fiksacji),
+        (2) nowa linia z resztą ilości (bez fiksacji, cena domyślna BC).
+        Użytkownik może na nowej linii ręcznie wybrać inną fiksację.
+      </div>
+
+      <!-- BEFORE / AFTER comparison -->
+      <div class="before-after">
+        <!-- BEFORE -->
+        <div class="panel panel-before">
+          <div class="panel-header">❌ PRZED podziałem — 1 linia, ilość &gt; Remaining Qty</div>
+          <table class="bc-grid">
+            <thead>
+              <tr>
+                <th>Nr linii</th>
+                <th>Nr indeksu</th>
+                <th>Opis</th>
+                <th>Ilość</th>
+                <th>JM</th>
+                <th>ID fiksacji</th>
+                <th>Bezp. koszt jedn.</th>
+                <th>Waluta fiks.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="background: #fde7e9;">
+                <td>10000</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td class="num"><b>50,000</b></td>
+                <td>t</td>
+                <td class="link">FIX-001</td>
+                <td class="num">2 400,00</td>
+                <td>USD</td>
+                <td><span title="Ilość 50 > Remaining Qty 20 ⚠️" style="color:#a80000;">⚠️ Qty &gt; Remaining (20)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- AFTER -->
+        <div class="panel panel-after">
+          <div class="panel-header">✅ PO podziale — 2 linie, czyste przypisanie</div>
+          <table class="bc-grid">
+            <thead>
+              <tr>
+                <th>Nr linii</th>
+                <th>Nr indeksu</th>
+                <th>Opis</th>
+                <th>Ilość</th>
+                <th>JM</th>
+                <th>ID fiksacji</th>
+                <th>Bezp. koszt jedn.</th>
+                <th>Waluta fiks.</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-fixated">
+                <td>10000</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td class="num"><b>20,000</b></td>
+                <td>t</td>
+                <td class="link">FIX-001</td>
+                <td class="num">2 400,00</td>
+                <td>USD</td>
+                <td><span class="badge badge-fix">✓ z fiksacją</span></td>
+              </tr>
+              <tr class="row-nofixation">
+                <td>20000</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td class="num"><b>30,000</b></td>
+                <td>t</td>
+                <td style="color:#999;">— brak —</td>
+                <td class="num">2 350,00</td>
+                <td></td>
+                <td><span class="badge badge-none">bez fiksacji</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Full Purchase Order Subform after split WITH optional second fixation -->
+      <div class="bc-fasttab">
+        <div class="bc-fasttab-header">
+          Linie <span style="font-weight:400; font-size:12px; color:#605e5c;">(po podziale + opcjonalne przypisanie FIX-009 do linii 20000)</span>
+        </div>
+        <div class="bc-fasttab-body">
+          <table class="bc-grid">
+            <thead>
+              <tr>
+                <th>Nr linii</th>
+                <th>Typ</th>
+                <th>Nr indeksu</th>
+                <th>Opis</th>
+                <th>Lokalizacja</th>
+                <th>Ilość</th>
+                <th>JM</th>
+                <th>Nr kontraktu N24</th>
+                <th>ID fiksacji N24</th>
+                <th>Nr wpisu fiksacji</th>
+                <th>Bezp. koszt jedn.</th>
+                <th>Waluta fiksacji</th>
+                <th>Kwota linii</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-fixated">
+                <td>10000</td>
+                <td>Zapas</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td>MAGAZYN-01</td>
+                <td class="num"><b>20,000</b></td>
+                <td>t</td>
+                <td class="link">K-2026-002</td>
+                <td class="link">FIX-001</td>
+                <td class="num">1</td>
+                <td class="num">2 400,00</td>
+                <td>USD</td>
+                <td class="num">48 000,00</td>
+                <td><span class="badge badge-fix">z fiksacją</span></td>
+              </tr>
+              <tr class="row-fixated" style="background: #e0f5e0;">
+                <td>20000</td>
+                <td>Zapas</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td>MAGAZYN-01</td>
+                <td class="num"><b>30,000</b></td>
+                <td>t</td>
+                <td class="link">K-2026-002</td>
+                <td class="link">FIX-009</td>
+                <td class="num">9</td>
+                <td class="num">2 450,00</td>
+                <td>USD</td>
+                <td class="num">73 500,00</td>
+                <td><span class="badge badge-fix">z fiksacją</span> <span class="badge badge-split">po podziale</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:#faf9f8; font-weight:600;">
+                <td colspan="5" style="text-align:right; padding-right:12px;">Razem:</td>
+                <td class="num">50,000</td>
+                <td>t</td>
+                <td colspan="4"></td>
+                <td></td>
+                <td class="num">121 500,00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Info note -->
+      <div class="note note-info">
+        <strong>ℹ️ 3-warstwowa obsługa over-receipt (Qty dokumentu > Remaining Qty fiksacji)</strong>
+        <b>Warstwa 1 (rekomendowana):</b> Użytkownik klika <b>Podziel wg fiksacji</b> PRZED księgowaniem → pełna widoczność podziału.<br>
+        <b>Warstwa 2 (automatyczne obcięcie):</b> Jeśli nie podzieli — przy księgowaniu system rozlicza fiksację tylko do wysokości ilości, jaka w niej jeszcze pozostaje. Nadwyżka księguje się bez fiksacji.<br>
+        <b>Warstwa 3 (fallback):</b> Po księgowaniu → akcja <b>Przypisz fiksację</b> na zaksięgowanym PZ — ręczne tworzenie wpisu aplikacji post-factum.
+      </div>
+
+      <!-- ===== POSTED PURCHASE RECEIPT — view after posting ===== -->
+      <h2 style="margin: 24px 0 4px; font-size: 17px; color: #323130; border-bottom: 2px solid #0078d4; padding-bottom: 6px;">
+        📄 Zaksięgowane przyjęcie zakupu — widok po księgowaniu (Warstwa 2 → Warstwa 3)
+      </h2>
+
+      <div class="note" style="border-left-color:#ca5010; background:#fff8e5; color:#7a4b00;">
+        <strong>💡 Scenariusz: dostawa 25 t, fiksacja miała tylko 20 t pozostałej ilości</strong>
+        System automatycznie obciął — zaaplikował 20 t z fiksacji, 5 t zaksięgowano bez fiksacji.
+        Użytkownik widzi to na zaksięgowanym PZ i może użyć akcji <b>Przypisz fiksację</b> dla nadwyżki.
+      </div>
+
+      <div class="bc-fasttab" style="margin-top: 12px;">
+        <div class="bc-fasttab-header" style="background:#e8f4fd;">
+          Zaksięgowane przyjęcie zakupu PZ-002180 — Linie
+          <span style="font-weight:400; font-size:12px; color:#605e5c;">Dostawca: V-AL-001 • Metal Suppliers Sp. z o.o.</span>
+        </div>
+        <div class="bc-fasttab-body">
+          <table class="bc-grid">
+            <thead>
+              <tr>
+                <th>Nr linii</th>
+                <th>Nr indeksu</th>
+                <th>Opis</th>
+                <th class="num">Ilość</th>
+                <th>JM</th>
+                <th>Nr kontraktu N24</th>
+                <th>ID fiksacji N24</th>
+                <th class="num">Bezp. koszt jedn.</th>
+                <th class="num" style="background:#dff6dd;">Ilość z fiksacją</th>
+                <th class="num" style="background:#fff4ce;">Ilość bez fiksacji</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linia 1: w pełni pokryta fiksacją -->
+              <tr>
+                <td>10000</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td class="num"><b>25,000</b></td>
+                <td>t</td>
+                <td>K-2026-002</td>
+                <td class="link">FIX-003</td>
+                <td class="num">2 415,00</td>
+                <td class="num" style="background:#dff6dd; color:#107c10; font-weight:700;">25,000</td>
+                <td class="num" style="background:#dff6dd;">0,000</td>
+                <td><span class="badge badge-fix">✓ pokryta</span></td>
+              </tr>
+              <!-- Linia 2: częściowo pokryta — automatyczne obcięcie -->
+              <tr style="background:#fff8e5;">
+                <td>20000</td>
+                <td class="link">ALUM-SHEET-3MM</td>
+                <td>Blacha aluminiowa 3mm</td>
+                <td class="num"><b>25,000</b></td>
+                <td>t</td>
+                <td>K-2026-002</td>
+                <td class="link">FIX-001</td>
+                <td class="num">2 400,00</td>
+                <td class="num" style="background:#fff4ce; color:#ca5010; font-weight:700;">20,000</td>
+                <td class="num" style="background:#fff4ce; color:#d13438; font-weight:700;">5,000 ⚠️</td>
+                <td><span class="badge badge-none">5 t bez fiksacji</span></td>
+              </tr>
+              <!-- Linia 3: bez fiksacji od początku -->
+              <tr style="background:#fff8e5;">
+                <td>30000</td>
+                <td class="link">CU-C11000</td>
+                <td>Miedź C11000 pręty</td>
+                <td class="num"><b>10,000</b></td>
+                <td>t</td>
+                <td>K-2026-002</td>
+                <td style="color:#999;">— brak —</td>
+                <td class="num">8 850,00</td>
+                <td class="num" style="background:#fff4ce;">0,000</td>
+                <td class="num" style="background:#fff4ce; color:#d13438; font-weight:700;">10,000 ⚠️</td>
+                <td><span class="badge badge-none">bez fiksacji</span></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:#faf9f8; font-weight:600;">
+                <td colspan="3" style="text-align:right; padding-right:12px;">Razem:</td>
+                <td class="num">60,000</td>
+                <td>t</td>
+                <td colspan="2"></td>
+                <td></td>
+                <td class="num" style="background:#dff6dd;">45,000</td>
+                <td class="num" style="background:#fff4ce; color:#d13438;">15,000</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="bc-actions" style="margin-top:8px; border-top:1px solid #edebe9;">
+        <button class="btn" style="background:#ca5010; color:#fff; border-color:#ca5010;">📎 Przypisz fiksację</button>
+        <button class="btn">Otwórz fiksację</button>
+        <button class="btn">Otwórz wpisy aplikacji</button>
+        <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+        <span style="font-size:11px; color:#605e5c; align-self:center;">Zaznacz linię z ⚠️ i kliknij <b>Przypisz fiksację</b>, aby powiązać nadwyżkę z inną fiksacją</span>
+      </div>
+
+    </div>
+
+    <!-- FactBox -->
+    <div class="bc-factbox">
+      <div class="fb-section">
+        <h3>🔒 Fiksacja linii 10000</h3>
+        <div class="fb-row"><span class="label">ID fiksacji:</span><span class="value link">FIX-001</span></div>
+        <div class="fb-row"><span class="label">Strona:</span><span class="value">Zakup</span></div>
+        <div class="fb-row"><span class="label">Ilość zafiksowana:</span><span class="value">20,000 t</span></div>
+        <div class="fb-row"><span class="label">Remaining Purch. Qty:</span><span class="value">20,000 t</span></div>
+        <div class="fb-row"><span class="label">LME:</span><span class="value">2 350,00 USD</span></div>
+        <div class="fb-row"><span class="label">Premia zak.:</span><span class="value">50,00 USD</span></div>
+        <div class="fb-row"><span class="label">Bezp. koszt jedn.:</span><span class="value">2 400,00 USD</span></div>
+        <div class="fb-row"><span class="label">Status:</span><span class="value">Otwarty</span></div>
+      </div>
+
+      <div class="fb-section">
+        <h3>🔒 Fiksacja linii 20000</h3>
+        <div class="fb-row"><span class="label">ID fiksacji:</span><span class="value link">FIX-009</span></div>
+        <div class="fb-row"><span class="label">Strona:</span><span class="value">Zakup</span></div>
+        <div class="fb-row"><span class="label">Ilość zafiksowana:</span><span class="value">40,000 t</span></div>
+        <div class="fb-row"><span class="label">Remaining Purch. Qty:</span><span class="value">35,000 t</span></div>
+        <div class="fb-row"><span class="label">LME:</span><span class="value">2 400,00 USD</span></div>
+        <div class="fb-row"><span class="label">Premia zak.:</span><span class="value">50,00 USD</span></div>
+        <div class="fb-row"><span class="label">Bezp. koszt jedn.:</span><span class="value">2 450,00 USD</span></div>
+        <div class="fb-row"><span class="label">Status:</span><span class="value">Częśc. zaaplikowany</span></div>
+      </div>
+
+      <div class="fb-section" style="border-color: #8764b8;">
+        <h3>⚡ Podział linii — wynik</h3>
+        <div class="fb-row"><span class="label">Oryg. ilość:</span><span class="value">50,000 t</span></div>
+        <div class="fb-row"><span class="label">→ Linia 10000:</span><span class="value">20,000 t (FIX-001)</span></div>
+        <div class="fb-row"><span class="label">→ Linia 20000:</span><span class="value">30,000 t (FIX-009)</span></div>
+        <div class="fb-row"><span class="label">Suma:</span><span class="value" style="color:#107c10;">50,000 t ✓</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Raport ryzyka hedgingowego N24 - Business Central</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Segoe WPC', sans-serif; font-size: 13px; color: #333; background: #f3f2f1; }
+  .bc-shell { max-width: 1400px; margin: 0 auto; background: #fff; min-height: 100vh; }
+  .bc-topbar { background: #002050; color: #fff; padding: 8px 20px; display: flex; align-items: center; gap: 16px; font-size: 14px; }
+  .bc-topbar .logo { font-weight: 700; font-size: 16px; }
+  .bc-topbar .env { background: rgba(255,255,255,0.15); padding: 2px 10px; border-radius: 3px; font-size: 12px; }
+  .bc-topbar .search { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 5px 12px; border-radius: 3px; width: 300px; font-size: 13px; }
+  .bc-topbar .search::placeholder { color: rgba(255,255,255,0.6); }
+  .bc-breadcrumb { background: #f8f8f8; border-bottom: 1px solid #e0e0e0; padding: 6px 20px; font-size: 12px; color: #666; }
+  .bc-breadcrumb a { color: #0078d4; text-decoration: none; }
+  .bc-page-header { padding: 12px 20px 8px; border-bottom: 1px solid #edebe9; display: flex; justify-content: space-between; align-items: center; }
+  .bc-page-header h1 { font-size: 20px; font-weight: 600; color: #323130; }
+  .bc-actions { display: flex; gap: 4px; padding: 4px 20px; border-bottom: 1px solid #edebe9; background: #faf9f8; }
+  .bc-actions .btn { padding: 5px 12px; font-size: 12px; border: 1px solid #c8c6c4; background: #fff; border-radius: 2px; cursor: pointer; color: #323130; }
+  .bc-actions .btn:hover { background: #edebe9; }
+  .bc-actions .btn.primary { background: #0078d4; color: #fff; border-color: #0078d4; }
+  .bc-filter-bar { padding: 6px 20px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; gap: 12px; align-items: center; font-size: 12px; }
+  .bc-filter-bar .filter-chip { background: #e8f4fd; border: 1px solid #0078d4; border-radius: 3px; padding: 2px 8px; color: #0078d4; }
+  .bc-grid { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .bc-grid thead th { background: #faf9f8; border-bottom: 2px solid #e0e0e0; padding: 8px 10px; text-align: left; font-weight: 600; color: #605e5c; font-size: 12px; white-space: nowrap; position: sticky; top: 0; }
+  .bc-grid tbody td { padding: 7px 10px; border-bottom: 1px solid #edebe9; white-space: nowrap; }
+  .bc-grid tbody tr:hover { background: #f3f2f1; }
+  .bc-grid tbody tr.selected { background: #e8f4fd; }
+  .bc-grid .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bc-grid .link { color: #0078d4; text-decoration: underline; cursor: pointer; }
+  .bc-grid .risk-high { color: #d13438; font-weight: 700; }
+  .bc-grid .negative { color: #d13438; }
+  .bc-factbox { background: #faf9f8; border-left: 1px solid #e0e0e0; padding: 12px 16px; width: 300px; }
+  .bc-factbox h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #323130; }
+  .bc-page-content { display: flex; }
+  .bc-page-main { flex: 1; overflow-x: auto; }
+  .bc-summary-row td { font-weight: 700 !important; background: #e8f4fd !important; }
+  .bc-badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .bc-badge.green { background: #dff6dd; color: #107c10; }
+  .bc-badge.orange { background: #fff4ce; color: #ca5010; }
+  .bc-badge.red { background: #fde7e9; color: #d13438; }
+  .bc-badge.gray { background: #edebe9; color: #8a8886; }
+  .bc-footer { padding: 8px 20px; border-top: 1px solid #e0e0e0; background: #faf9f8; font-size: 11px; color: #8a8886; display: flex; justify-content: space-between; }
+</style></head>
+<body>
+<div class="bc-shell">
+  <div class="bc-topbar">
+    <span class="logo">Dynamics 365 Business Central</span>
+    <span class="env">TSR Produkcja</span>
+    <input class="search" placeholder="Powiedz, co chcesz zrobić..." readonly>
+    <span style="margin-left:auto;">AK</span>
+  </div>
+  <div class="bc-breadcrumb"><a href="#">Strona główna</a> &rsaquo; <a href="#">Moduły N24</a> &rsaquo; Raport ryzyka hedgingowego N24</div>
+  <div class="bc-page-header">
+    <h1>Raport ryzyka hedgingowego N24</h1>
+    <span style="font-size:12px;color:#605e5c;">Stan na: 24.04.2026</span>
+  </div>
+  <div class="bc-actions">
+    <button class="btn primary">Odśwież dane</button>
+    <button class="btn">Rejestr hedgingów</button>
+    <button class="btn">Przegląd kontraktów</button>
+    <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
+    <button class="btn">Eksport do Excela</button>
+  </div>
+  <div class="bc-filter-bar">
+    Filtry: <span class="filter-chip">Grupa materiałowa: (wszystkie)</span>
+    <span class="filter-chip">Lokalizacje: Dąbrowa G., Polkowice, Tranzyt</span>
+    <span style="margin-left:auto;"><strong>Próg hedgingowy: 15 t</strong></span>
+  </div>
+  <div class="bc-page-content">
+    <div class="bc-page-main">
+      <table class="bc-grid">
+        <thead>
+          <tr>
+            <th>Nr indeksu</th><th>Opis</th><th>Grupa materiałowa</th>
+            <th class="num">Zapas (t)</th><th class="num">Zafiksowany zakup (t)</th>
+            <th class="num">Zafiksowana sprzedaż (t)</th><th class="num">Ryzyko per indeks (t)</th>
+            <th class="num">Otwarty hedging (t)</th><th class="num">Ryzyko całkowite (t)</th>
+            <th>Próg</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34 blacha</td><td>Aluminium</td>
+            <td class="num">85,0</td><td class="num">52,0</td><td class="num">30,0</td>
+            <td class="num">107,0</td><td class="num"></td><td class="num"></td><td></td>
+          </tr>
+          <tr>
+            <td class="link">AL-6061-T6</td><td>Aluminium 6061-T6 rury</td><td>Aluminium</td>
+            <td class="num">35,0</td><td class="num">65,0</td><td class="num">0,0</td>
+            <td class="num">100,0</td><td class="num"></td><td class="num"></td><td></td>
+          </tr>
+          <tr>
+            <td class="link">AL-3003-H14</td><td>Aluminium 3003-H14 arkusze</td><td>Aluminium</td>
+            <td class="num">12,0</td><td class="num">0,0</td><td class="num">0,0</td>
+            <td class="num">12,0</td><td class="num"></td><td class="num"></td><td></td>
+          </tr>
+          <tr class="bc-summary-row">
+            <td colspan="3"><strong>SUMA: Aluminium</strong></td>
+            <td class="num"><strong>132,0</strong></td><td class="num"><strong>117,0</strong></td>
+            <td class="num"><strong>30,0</strong></td><td class="num"><strong>219,0</strong></td>
+            <td class="num"><strong>100,0</strong></td>
+            <td class="num risk-high"><strong>119,0</strong></td>
+            <td><span class="bc-badge red">POWYŻEJ 15t</span></td>
+          </tr>
+          <tr><td colspan="10" style="height:8px;border:none;"></td></tr>
+          <tr>
+            <td class="link">CU-C11000</td><td>Miedź C11000 pręty</td><td>Miedź</td>
+            <td class="num">45,0</td><td class="num">200,0</td><td class="num">0,0</td>
+            <td class="num">245,0</td><td class="num"></td><td class="num"></td><td></td>
+          </tr>
+          <tr>
+            <td class="link">CU-C12200</td><td>Miedź C12200 rury</td><td>Miedź</td>
+            <td class="num">8,0</td><td class="num">0,0</td><td class="num">0,0</td>
+            <td class="num">8,0</td><td class="num"></td><td class="num"></td><td></td>
+          </tr>
+          <tr class="bc-summary-row">
+            <td colspan="3"><strong>SUMA: Miedź</strong></td>
+            <td class="num"><strong>53,0</strong></td><td class="num"><strong>200,0</strong></td>
+            <td class="num"><strong>0,0</strong></td><td class="num"><strong>253,0</strong></td>
+            <td class="num"><strong>25,0</strong></td>
+            <td class="num risk-high"><strong>228,0</strong></td>
+            <td><span class="bc-badge red">POWYŻEJ 15t</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="bc-factbox">
+      <h3>Podsumowanie ryzyka</h3>
+      <div style="font-size:12px;line-height:2;">
+        <strong>Aluminium:</strong><br>
+        Ryzyko brutto: 219,0 t<br>
+        Hedging: -100,0 t<br>
+        <span class="risk-high">Ryzyko netto: 119,0 t</span><br>
+        <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
+        <strong>Miedź:</strong><br>
+        Ryzyko brutto: 253,0 t<br>
+        Hedging: -25,0 t<br>
+        <span class="risk-high">Ryzyko netto: 228,0 t</span><br>
+        <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
+        <div style="background:#fde7e9;padding:6px 8px;border-radius:4px;margin-top:4px;">
+          <strong style="color:#d13438;">Próg: 15 t</strong><br>
+          Obie grupy powyżej progu!
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bc-footer">
+    <span>Raport ryzyka hedgingowego N24 | Strona 50112</span>
+    <span>Firma: TSR Poland Sp. z o.o. | Dane na żywo z BC</span>
+  </div>
+</div>
+</body></html>
