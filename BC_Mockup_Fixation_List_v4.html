@@ -70,12 +70,13 @@
     <button class="btn">Odśwież</button>
     <span style="border-left:1px solid #c8c6c4;margin:0 8px;"></span>
     <button class="btn">Podziel fiksację</button>
+    <button class="btn" style="background:#d13438;color:#fff;border-color:#d13438;">Wycofaj fiksację</button>
     <button class="btn">Przegląd kontraktów</button>
     <button class="btn">Drukuj</button>
     <button class="btn">Eksport do Excela</button>
   </div>
   <div class="bc-filter-bar">
-    Filtry: <span class="filter-chip">Status: Otwarty | Częściowo zaaplikowany</span>
+    Filtry: <span class="filter-chip">Status: Otwarty | Częściowo zaaplikowany | Do zamknięcia</span>
     <span style="margin-left:auto;color:#8a8886;">Sortowanie: Nr wpisu rosnąco | Strona fiksacji wybierana przez użytkownika</span>
   </div>
   <div class="bc-page-content">
@@ -190,6 +191,25 @@
             <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">25,000</td>
             <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
             <td><span class="bc-badge green">Otwarty</span></td>
+          </tr>
+          <!-- FIX-005a: Zakup — status Do zamknięcia (nowy status) -->
+          <tr>
+            <td class="link">5a</td><td>FIX-005A</td>
+            <td class="side-purchase">Zakup</td>
+            <td>K-2026-001</td>
+            <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34</td>
+            <td>V-10020</td><td class="hidden-cell">&mdash;</td>
+            <td class="hidden-cell">&mdash;</td>
+            <td>12.02.2026</td><td>USD</td>
+            <td class="num">2 360</td>
+            <td class="num">50</td><td class="num hidden-cell">n/d</td>
+            <td class="num">2 410</td><td class="num hidden-cell">n/d</td>
+            <td class="num hidden-cell" style="background:#f0e6ff;">n/d</td>
+            <td class="num">30,000</td>
+            <td class="num">28,500</td><td class="num hidden-cell">n/d</td>
+            <td class="num" style="font-weight:700;color:#0078d4;background:#e8f4fd;">1,500</td>
+            <td class="num hidden-cell" style="background:#fff4ce;">n/d</td>
+            <td><span class="bc-badge" style="background:#e8daef;color:#5b2d8e;">Do zamknięcia</span></td>
           </tr>
           <!-- FIX-006: Obustronny — pełny rekord z marżą -->
           <tr>
