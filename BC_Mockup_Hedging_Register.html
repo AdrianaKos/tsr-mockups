@@ -71,7 +71,7 @@
           <tr>
             <th>Nr wpisu</th><th>Grupa materiałowa</th><th class="num">Ilość hedgingu (t)</th>
             <th>Data otwarcia</th><th class="num">Cena otwarcia</th><th>Data wygaśnięcia</th>
-            <th>Data zamknięcia</th><th class="num">Cena zamknięcia</th><th class="num">Wynik hedgingu</th>
+            <th>Data zamknięcia</th><th class="num">Cena zamknięcia</th><th class="num">Wynik hedgingu (EUR)</th><th class="num">Wynik (PLN)</th>
             <th>Waluta</th><th>Kod lokalizacji</th><th>Status</th><th>Nr faktury</th><th>Opis</th>
           </tr>
         </thead>
@@ -79,38 +79,38 @@
           <tr>
             <td>6</td><td>Aluminium</td><td class="num">25,000</td>
             <td>02.04.2026</td><td class="num">2 310,00</td><td>02.07.2026</td>
-            <td></td><td class="num"></td><td class="num"></td>
-            <td>USD</td><td>DABROWA</td><td><span class="bc-badge blue">W drodze</span></td><td>FV/2026/0412</td><td>Zabezpieczenie Q2 — towar w transporcie</td>
+            <td></td><td class="num"></td><td class="num"></td><td class="num"></td>
+            <td>EUR</td><td>DABROWA</td><td><span class="bc-badge blue">W drodze</span></td><td>FV/2026/0412</td><td>Zabezpieczenie Q2 — towar w transporcie</td>
           </tr>
           <tr>
             <td>5</td><td>Aluminium</td><td class="num">50,000</td>
             <td>15.03.2026</td><td class="num">2 280,00</td><td>15.06.2026</td>
-            <td></td><td class="num"></td><td class="num"></td>
-            <td>USD</td><td>POLKOWICE</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q2 aluminium podwójny</td>
+            <td></td><td class="num"></td><td class="num"></td><td class="num"></td>
+            <td>EUR</td><td>POLKOWICE</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q2 aluminium podwójny</td>
           </tr>
           <tr class="selected">
             <td>4</td><td>Miedź</td><td class="num">25,000</td>
             <td>10.02.2026</td><td class="num">8 800,00</td><td>10.05.2026</td>
-            <td></td><td class="num"></td><td class="num"></td>
-            <td>USD</td><td>DABROWA</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 miedź #1</td>
+            <td></td><td class="num"></td><td class="num"></td><td class="num"></td>
+            <td>EUR</td><td>DABROWA</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 miedź #1</td>
           </tr>
           <tr>
             <td>3</td><td>Aluminium</td><td class="num">25,000</td>
             <td>01.02.2026</td><td class="num">2 400,00</td><td>01.05.2026</td>
-            <td></td><td class="num"></td><td class="num"></td>
-            <td>USD</td><td>TRANZYT</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 aluminium #3</td>
+            <td></td><td class="num"></td><td class="num"></td><td class="num"></td>
+            <td>EUR</td><td>TRANZYT</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 aluminium #3</td>
           </tr>
           <tr>
             <td>2</td><td>Aluminium</td><td class="num">25,000</td>
             <td>15.01.2026</td><td class="num">2 350,00</td><td>15.04.2026</td>
-            <td></td><td class="num"></td><td class="num"></td>
-            <td>USD</td><td>DABROWA</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 aluminium #2</td>
+            <td></td><td class="num"></td><td class="num"></td><td class="num"></td>
+            <td>EUR</td><td>DABROWA</td><td><span class="bc-badge green">Otwarty</span></td><td></td><td>Zabezpieczenie Q1 aluminium #2</td>
           </tr>
           <tr style="color:#8a8886;">
             <td>1</td><td>Aluminium</td><td class="num">25,000</td>
             <td>05.01.2026</td><td class="num">2 320,00</td><td>05.04.2026</td>
-            <td>28.02.2026</td><td class="num">2 380,00</td><td class="num negative">-1 500,00</td>
-            <td>USD</td><td>DABROWA</td><td><span class="bc-badge gray">Zamknięty</span></td><td>FV/2026/0115</td><td>Zabezpieczenie Q1 aluminium #1</td>
+            <td>28.02.2026</td><td class="num">2 380,00</td><td class="num negative">-1 500,00</td><td class="num negative">-6 225,00</td>
+            <td>EUR</td><td>DABROWA</td><td><span class="bc-badge gray">Zamknięty</span></td><td>FV/2026/0115</td><td>Zabezpieczenie Q1 aluminium #1</td>
           </tr>
         </tbody>
       </table>
@@ -133,7 +133,9 @@
         <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
         <strong>Zamknięte:</strong><br>
         Ilość: 25,000 t<br>
-        Wynik: <span class="negative">-1 500,00 USD</span>
+        Wynik: <span class="negative">-1 500,00 EUR</span><br>
+        Wynik (PLN): <span class="negative">-6 225,00 PLN</span><br>
+        <span style="font-size:11px;color:#605e5c;">Kurs EUR: 4,15 (dnia 27.02.2026)</span>
       </div>
     </div>
   </div>
