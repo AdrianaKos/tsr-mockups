@@ -62,8 +62,8 @@
   </div>
   <div class="bc-filter-bar">
     Filtry: <span class="filter-chip">Grupa materiałowa: (wszystkie)</span>
-    <span class="filter-chip">Lokalizacje: Dąbrowa G., Polkowice, Tranzyt</span>
-    <span style="margin-left:auto;"><strong>Próg hedgingowy: 15 t</strong></span>
+    <span class="filter-chip">Lokalizacja: Dąbrowa G., Polkowice, Tranzyt</span>
+    <span style="margin-left:auto;"><strong>Próg hedgingowy: 15 t</strong> &nbsp;|&nbsp; Formuła: Zapas + Zakup zafikso. + Zakup ZB − Sprzedaż zafikso. − Sprzedaż ZB</span>
   </div>
   <div class="bc-page-content">
     <div class="bc-page-main">
@@ -71,53 +71,86 @@
         <thead>
           <tr>
             <th>Nr indeksu</th><th>Opis</th><th>Grupa materiałowa</th>
-            <th class="num">Zapas (t)</th><th class="num">Zafiksowany zakup (t)</th>
-            <th class="num">Zafiksowana sprzedaż (t)</th><th class="num">Ryzyko per indeks (t)</th>
-            <th class="num">Otwarty hedging (t)</th><th class="num">Ryzyko całkowite (t)</th>
+            <th class="num">Zapas (t)</th>
+            <th class="num">Zakup zafikso. (t)</th>
+            <th class="num" style="background:#fffbe6;">Zakup z zam. zbiorczych (t)</th>
+            <th class="num">Sprzedaż zafikso. (t)</th>
+            <th class="num" style="background:#fffbe6;">Sprzedaż z zam. zbiorczych (t)</th>
+            <th class="num">Ryzyko per indeks (t)</th>
+            <th class="num">Otwarty hedging (t) <span style="font-weight:400;font-size:11px;">[tylko Open]</span></th>
+            <th class="num">Ryzyko całkowite (t)</th>
             <th>Próg</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td class="link">AL-5052-H34</td><td>Aluminium 5052-H34 blacha</td><td>Aluminium</td>
-            <td class="num">85,0</td><td class="num">52,0</td><td class="num">30,0</td>
-            <td class="num">107,0</td><td class="num"></td><td class="num"></td><td></td>
+            <td class="num">85,0</td>
+            <td class="num">52,0</td>
+            <td class="num" style="background:#fffbe6;">40,0</td>
+            <td class="num">30,0</td>
+            <td class="num" style="background:#fffbe6;">20,0</td>
+            <td class="num">127,0</td><td class="num"></td><td class="num"></td><td></td>
           </tr>
           <tr>
             <td class="link">AL-6061-T6</td><td>Aluminium 6061-T6 rury</td><td>Aluminium</td>
-            <td class="num">35,0</td><td class="num">65,0</td><td class="num">0,0</td>
-            <td class="num">100,0</td><td class="num"></td><td class="num"></td><td></td>
+            <td class="num">35,0</td>
+            <td class="num">65,0</td>
+            <td class="num" style="background:#fffbe6;">25,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">15,0</td>
+            <td class="num">110,0</td><td class="num"></td><td class="num"></td><td></td>
           </tr>
           <tr>
             <td class="link">AL-3003-H14</td><td>Aluminium 3003-H14 arkusze</td><td>Aluminium</td>
-            <td class="num">12,0</td><td class="num">0,0</td><td class="num">0,0</td>
+            <td class="num">12,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">0,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">0,0</td>
             <td class="num">12,0</td><td class="num"></td><td class="num"></td><td></td>
           </tr>
           <tr class="bc-summary-row">
             <td colspan="3"><strong>SUMA: Aluminium</strong></td>
-            <td class="num"><strong>132,0</strong></td><td class="num"><strong>117,0</strong></td>
-            <td class="num"><strong>30,0</strong></td><td class="num"><strong>219,0</strong></td>
+            <td class="num"><strong>132,0</strong></td>
+            <td class="num"><strong>117,0</strong></td>
+            <td class="num" style="background:#fff3cd;"><strong>65,0</strong></td>
+            <td class="num"><strong>30,0</strong></td>
+            <td class="num" style="background:#fff3cd;"><strong>35,0</strong></td>
+            <td class="num"><strong>249,0</strong></td>
             <td class="num"><strong>100,0</strong></td>
-            <td class="num risk-high"><strong>119,0</strong></td>
+            <td class="num risk-high"><strong>149,0</strong></td>
             <td><span class="bc-badge red">POWYŻEJ 15t</span></td>
           </tr>
-          <tr><td colspan="10" style="height:8px;border:none;"></td></tr>
+          <tr><td colspan="12" style="height:8px;border:none;"></td></tr>
           <tr>
             <td class="link">CU-C11000</td><td>Miedź C11000 pręty</td><td>Miedź</td>
-            <td class="num">45,0</td><td class="num">200,0</td><td class="num">0,0</td>
-            <td class="num">245,0</td><td class="num"></td><td class="num"></td><td></td>
+            <td class="num">45,0</td>
+            <td class="num">200,0</td>
+            <td class="num" style="background:#fffbe6;">50,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">30,0</td>
+            <td class="num">265,0</td><td class="num"></td><td class="num"></td><td></td>
           </tr>
           <tr>
             <td class="link">CU-C12200</td><td>Miedź C12200 rury</td><td>Miedź</td>
-            <td class="num">8,0</td><td class="num">0,0</td><td class="num">0,0</td>
+            <td class="num">8,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">0,0</td>
+            <td class="num">0,0</td>
+            <td class="num" style="background:#fffbe6;">0,0</td>
             <td class="num">8,0</td><td class="num"></td><td class="num"></td><td></td>
           </tr>
           <tr class="bc-summary-row">
             <td colspan="3"><strong>SUMA: Miedź</strong></td>
-            <td class="num"><strong>53,0</strong></td><td class="num"><strong>200,0</strong></td>
-            <td class="num"><strong>0,0</strong></td><td class="num"><strong>253,0</strong></td>
+            <td class="num"><strong>53,0</strong></td>
+            <td class="num"><strong>200,0</strong></td>
+            <td class="num" style="background:#fff3cd;"><strong>50,0</strong></td>
+            <td class="num"><strong>0,0</strong></td>
+            <td class="num" style="background:#fff3cd;"><strong>30,0</strong></td>
+            <td class="num"><strong>273,0</strong></td>
             <td class="num"><strong>25,0</strong></td>
-            <td class="num risk-high"><strong>228,0</strong></td>
+            <td class="num risk-high"><strong>248,0</strong></td>
             <td><span class="bc-badge red">POWYŻEJ 15t</span></td>
           </tr>
         </tbody>
@@ -127,24 +160,38 @@
       <h3>Podsumowanie ryzyka</h3>
       <div style="font-size:12px;line-height:2;">
         <strong>Aluminium:</strong><br>
-        Ryzyko brutto: 219,0 t<br>
-        Hedging: -100,0 t<br>
-        <span class="risk-high">Ryzyko netto: 119,0 t</span><br>
+        Zapas: 132,0 t<br>
+        Zakup zafikso.: +117,0 t<br>
+        Zakup z ZB: +65,0 t<br>
+        Sprzedaż zafikso.: -30,0 t<br>
+        Sprzedaż z ZB: -35,0 t<br>
+        Ryzyko brutto: 249,0 t<br>
+        Hedging Open: -100,0 t<br>
+        <span class="risk-high">Ryzyko netto: 149,0 t</span><br>
         <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
         <strong>Miedź:</strong><br>
-        Ryzyko brutto: 253,0 t<br>
-        Hedging: -25,0 t<br>
-        <span class="risk-high">Ryzyko netto: 228,0 t</span><br>
+        Zapas: 53,0 t<br>
+        Zakup zafikso.: +200,0 t<br>
+        Zakup z ZB: +50,0 t<br>
+        Sprzedaż zafikso.: -0,0 t<br>
+        Sprzedaż z ZB: -30,0 t<br>
+        Ryzyko brutto: 273,0 t<br>
+        Hedging Open: -25,0 t<br>
+        <span class="risk-high">Ryzyko netto: 248,0 t</span><br>
         <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
         <div style="background:#fde7e9;padding:6px 8px;border-radius:4px;margin-top:4px;">
           <strong style="color:#d13438;">Próg: 15 t</strong><br>
           Obie grupy powyżej progu!
         </div>
+        <hr style="margin:6px 0;border:none;border-top:1px solid #e0e0e0;">
+        <div style="background:#fffbe6;padding:6px 8px;border-radius:4px;font-size:11px;">
+          ⚠ Hedging "W drodze": 25,0 t (AL)<br>nie wchodzi do kalkulacji
+        </div>
       </div>
     </div>
   </div>
   <div class="bc-footer">
-    <span>Raport ryzyka hedgingowego N24 | Strona 50112</span>
+    <span>Raport ryzyka hedgingowego N24 | Strona 50112 | v2 (19.05.2026)</span>
     <span>Firma: TSR Poland Sp. z o.o. | Dane na żywo z BC</span>
   </div>
 </div>
